@@ -26,7 +26,7 @@ function App() {
       <GlobalStyle />
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route element={<Home />} />
+          <Route index element={<Home />} />
           <Route
             path="users"
             element={
