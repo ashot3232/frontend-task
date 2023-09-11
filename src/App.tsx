@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { createGlobalStyle } from 'styled-components';
 
 import Layout from './components/Layout';
 import Fallback from './components/Fallback';
@@ -9,9 +10,20 @@ import NoMatch from './pages/NoMatch';
 const UserDetails = React.lazy(() => import('./pages/UserDetails'));
 const UserList = React.lazy(() => import('./pages/UserList'));
 
+const GlobalStyle = createGlobalStyle`
+  * {
+     margin: 0;
+     padding: 0;
+     outline: 0;
+     box-sizing: border-box;
+     font-family: 'Open Sans', sans-serif; 
+  }
+`;
+
 function App() {
   return (
     <div>
+      <GlobalStyle />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route element={<Home />} />
