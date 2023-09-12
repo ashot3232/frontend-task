@@ -6,7 +6,7 @@ import { api } from '../../api';
 type IdType = UserType['id'];
 
 const fetchUser = createAsyncThunk('user/fetch', async (id: IdType) => {
-  const response = await api.get<UserType>(`http://localhost:3004/users/${id}`);
+  const response = await api.get<UserType>(`/users/${id}`);
   return response.data;
 });
 

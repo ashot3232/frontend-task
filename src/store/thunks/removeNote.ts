@@ -6,7 +6,7 @@ import { NoteType } from '../../types';
 type IdType = NoteType['id'];
 
 const removeNote = createAsyncThunk('notes/remove', async (id: IdType) => {
-  await api.delete(`/api/notes/${id}`);
+  await api.delete(`/notes/${id}`);
 
   return id;
 });
