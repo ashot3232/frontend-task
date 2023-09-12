@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useState } from 'react';
+import React, { FC, Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { GoTriangleDown, GoTriangleUp } from 'react-icons/go';
 
@@ -56,6 +56,37 @@ const IconWrapper = styled.div`
   margin-right: 10px;
 `;
 
+const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+`;
+
+const PaginationButton = styled.button`
+  background-color: #04aa6d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #03a05e;
+  }
+
+  &:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+  }
+`;
+
+const PaginationInfo = styled.span`
+  color: #666;
+`;
+
 interface Column {
   key: string;
   label: string;
@@ -69,9 +100,16 @@ interface TableProps {
   columns: Column[];
 }
 
+const itemsPerPage = 10;
+
 const Table: FC<TableProps> = ({ data, columns }) => {
   const [sortOrder, setSortOrder] = useState<null | string>(null);
   const [sortBy, setSortBy] = useState<null | string>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [sortOrder, sortBy]);
 
   const handleClick = (label: string) => {
     if (sortBy && label !== sortBy) {
@@ -132,7 +170,12 @@ const Table: FC<TableProps> = ({ data, columns }) => {
     });
   }
 
-  const renderedRows = sortedData.map((item) => {
+  const totalPages = Math.ceil(sortedData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const dataToDisplay = sortedData.slice(startIndex, endIndex);
+
+  const renderedRows = dataToDisplay.map((item) => {
     return (
       <TableRow key={item.id}>
         {columns.map(({ key, render }) => {
@@ -161,6 +204,23 @@ const Table: FC<TableProps> = ({ data, columns }) => {
         </thead>
         <tbody>{renderedRows}</tbody>
       </StyledTable>
+      <Pagination>
+        <PaginationButton
+          onClick={() => setCurrentPage((prev) => prev - 1)}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </PaginationButton>
+        <PaginationInfo>
+          Page {currentPage} of {totalPages}
+        </PaginationInfo>
+        <PaginationButton
+          onClick={() => setCurrentPage((prev) => prev + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </PaginationButton>
+      </Pagination>
     </TableContainer>
   );
 };
