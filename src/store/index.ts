@@ -2,16 +2,19 @@ import { configureStore, ThunkDispatch, Action } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 import { usersReducer } from './slices/usersSlice';
+import { userReducer } from './slices/userSlice';
 import { notesReducer } from './slices/notesSlice';
 
 export const store = configureStore({
   reducer: {
+    user: userReducer,
     users: usersReducer,
     notes: notesReducer,
   },
 });
 
 export * from './thunks/fetchUsers';
+export * from './thunks/fetchUser';
 export * from './thunks/fetchNotes';
 export * from './thunks/addNote';
 export * from './thunks/removeNote';

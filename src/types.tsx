@@ -3,6 +3,7 @@ export interface UserType {
   firstName: string;
   lastName: string;
   email: string;
+  profileImage: string;
   age: number;
 }
 
