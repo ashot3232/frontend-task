@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { AiOutlineDelete } from 'react-icons/ai';
 
-import { fetchUsers, useAppSelector } from '../store';
+import { fetchUsers, removeUser, useAppSelector } from '../store';
 import Table from '../components/Table';
 import { UserType } from '../types';
 import { useThunk } from '../hooks/useThunk';
@@ -33,6 +33,7 @@ const SearchInput = styled.input`
 
 function UserList() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [doRemoveUser] = useThunk(removeUser);
   const [doFetchUsers, isLoadingUsers, loadingUsersError] =
     useThunk(fetchUsers);
 
@@ -43,6 +44,12 @@ function UserList() {
   useEffect(() => {
     doFetchUsers();
   }, [doFetchUsers]);
+
+  const handleUserRemove = (user: UserType) => {
+    window.confirm(
+      `Are you sure you want to remove ${user.firstName} ${user.lastName}`,
+    ) && doRemoveUser(user.id);
+  };
 
   const columns = [
     {
@@ -70,10 +77,10 @@ function UserList() {
     {
       label: 'Action',
       key: 'action',
-      render: ({ id }: UserType) => {
+      render: (user: UserType) => {
         return (
-          <TableContainer key={id}>
-            <AiOutlineDelete />
+          <TableContainer key={user.id}>
+            <AiOutlineDelete onClick={() => handleUserRemove(user)} />
           </TableContainer>
         );
       },

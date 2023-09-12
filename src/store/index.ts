@@ -18,6 +18,7 @@ export * from './thunks/fetchUser';
 export * from './thunks/fetchNotes';
 export * from './thunks/addNote';
 export * from './thunks/removeNote';
+export * from './thunks/removeUser';
 
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch = () => useDispatch<AppDispatch>();
