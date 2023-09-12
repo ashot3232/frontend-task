@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 
+import { NoteType } from '../types';
+import { fetchNotes } from '../api';
 import Note from './Note';
 import Box from './Box';
 
@@ -32,15 +34,26 @@ const StyledBox = styled(Box)`
 `;
 
 function Notes() {
+  const [notes, setNotes] = useState<NoteType[]>([]);
+
+  useEffect(() => {
+    const fetchNotesData = async () => {
+      const data = await fetchNotes();
+      setNotes(data);
+    };
+
+    fetchNotesData();
+  }, []);
+
+  const renderedNotes = notes.map((note) => <Note key={note.id} {...note} />);
+
   return (
     <Wrapper>
       <StyledBox>
         <AddIcon />
       </StyledBox>
 
-      <Note />
-      <Note />
-      <Note />
+      {renderedNotes}
     </Wrapper>
   );
 }

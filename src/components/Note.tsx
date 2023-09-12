@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 import { AiOutlineDelete } from 'react-icons/ai';
 
@@ -36,12 +36,17 @@ const DeleteIcon = styled(AiOutlineDelete)`
   margin-right: 4px;
 `;
 
-function Note() {
+interface NoteProps {
+  title: string;
+  description: string;
+}
+
+const Note: FC<NoteProps> = ({ title, description }) => {
   return (
     <StyledBox>
       <Details>
-        <h3>Title</h3>
-        <Description>Description</Description>
+        <h3>{title}</h3>
+        <Description>{description}</Description>
       </Details>
       <BottomContent>
         <DeleteIcon />
@@ -49,6 +54,6 @@ function Note() {
       </BottomContent>
     </StyledBox>
   );
-}
+};
 
 export default Note;
