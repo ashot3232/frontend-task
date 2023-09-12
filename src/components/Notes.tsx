@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 
 import { NoteType } from '../types';
 import Note from './Note';
 import Box from './Box';
+import AddNote from './AddNote';
 import { useThunk } from '../hooks/useThunk';
 import { fetchNotes, useAppSelector } from '../store';
 
@@ -35,6 +36,7 @@ const StyledBox = styled(Box)`
 `;
 
 function Notes() {
+  const [showAddForm, setShowAddForm] = useState<boolean>(false);
   const [doFetchNotes, isLoadingUsers, loadingUsersError] =
     useThunk(fetchNotes);
 
@@ -57,8 +59,9 @@ function Notes() {
 
   return (
     <Wrapper>
+      {showAddForm && <AddNote onClose={() => setShowAddForm(false)} />}
       <StyledBox>
-        <AddIcon />
+        <AddIcon onClick={() => setShowAddForm(true)} />
       </StyledBox>
 
       {content}
