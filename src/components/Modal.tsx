@@ -18,7 +18,7 @@ const StyledModalBox = styled.div`
 
 const StyledModal = styled.div`
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 50%;
   z-index: 3;
   width: 100%;

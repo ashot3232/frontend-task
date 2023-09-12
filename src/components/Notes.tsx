@@ -27,12 +27,18 @@ const AddIcon = styled(AiOutlinePlusCircle)`
   font-size: 78px;
 `;
 
-const StyledBox = styled(Box)`
+const StyledBox = styled(Box)<React.HTMLAttributes<HTMLDivElement>>`
   display: flex;
   align-items: center;
   cursor: pointer;
   flex-direction: column;
   justify-content: center;
+`;
+
+const StyledText = styled.p`
+  color: ${(props) => props.theme.colors.dark};
+  font-weight: 500;
+  margin-top: 20px;
 `;
 
 function Notes() {
@@ -60,8 +66,9 @@ function Notes() {
   return (
     <Wrapper>
       {showAddForm && <AddNote onClose={() => setShowAddForm(false)} />}
-      <StyledBox>
-        <AddIcon onClick={() => setShowAddForm(true)} />
+      <StyledBox onClick={() => setShowAddForm(true)}>
+        <AddIcon />
+        <StyledText>Add new note</StyledText>
       </StyledBox>
 
       {content}

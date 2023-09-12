@@ -14,8 +14,12 @@ interface BoxProps {
   className?: string;
 }
 
-const Box: FC<BoxProps> = ({ children, className }) => {
-  return <Wrapper className={className}>{children}</Wrapper>;
+const Box: FC<BoxProps> = ({ children, className, ...props }) => {
+  return (
+    <Wrapper {...props} className={className}>
+      {children}
+    </Wrapper>
+  );
 };
 
 export default Box;
