@@ -1,8 +1,10 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { AiOutlineClose } from 'react-icons/ai';
 
 import Modal from './Modal';
+import { addNote } from '../store';
+import { useThunk } from '../hooks/useThunk';
 
 const StyledHeader = styled.div`
   padding: 15px 25px;
@@ -83,10 +85,32 @@ type AddNoteProps = {
 };
 
 const AddNote: FC<AddNoteProps> = ({ onClose }) => {
+  const [note, setNote] = useState({
+    title: '',
+    description: '',
+  });
+  const [submitted, setSubmitted] = useState(false);
+  const [doCreateNote, isLoading, error] = useThunk(addNote);
+
+  useEffect(() => {
+    if (!isLoading && !error && submitted) {
+      onClose();
+    }
+  }, [isLoading, error, onClose, submitted]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setSubmitted(true);
+    doCreateNote(note);
+  };
 
-    onClose();
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setNote((prevNote) => ({
+      ...prevNote,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   return (
@@ -98,13 +122,27 @@ const AddNote: FC<AddNoteProps> = ({ onClose }) => {
       <StyledForm onSubmit={handleSubmit}>
         <StyledFormItem>
           <StyledLabel>Title</StyledLabel>
-          <StyledInput type="text" />
+          <StyledInput
+            value={note.title}
+            onChange={handleChange}
+            name="title"
+            type="text"
+          />
         </StyledFormItem>
         <StyledFormItem>
           <StyledLabel>Description</StyledLabel>
-          <StyledTextarea></StyledTextarea>
+          <StyledTextarea
+            name="description"
+            value={note.description}
+            onChange={handleChange}
+          />
         </StyledFormItem>
-        <StyledButton type="submit">Submit</StyledButton>
+        {error && <div>Error adding note</div>}
+        {!error && (
+          <StyledButton type="submit" disabled={isLoading}>
+            Submit
+          </StyledButton>
+        )}
       </StyledForm>
     </Modal>
   );

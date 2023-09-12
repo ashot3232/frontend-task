@@ -13,6 +13,8 @@ export const store = configureStore({
 
 export * from './thunks/fetchUsers';
 export * from './thunks/fetchNotes';
+export * from './thunks/addNote';
+export * from './thunks/removeNote';
 
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch = () => useDispatch<AppDispatch>();

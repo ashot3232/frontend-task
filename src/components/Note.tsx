@@ -2,7 +2,9 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 import { AiOutlineDelete } from 'react-icons/ai';
 
+import { removeNote } from '../store';
 import Box from './Box';
+import { useThunk } from '../hooks/useThunk';
 
 const StyledBox = styled(Box)`
   display: flex;
@@ -37,11 +39,18 @@ const DeleteIcon = styled(AiOutlineDelete)`
 `;
 
 interface NoteProps {
+  id: string;
   title: string;
   description: string;
 }
 
-const Note: FC<NoteProps> = ({ title, description }) => {
+const Note: FC<NoteProps> = ({ id, title, description }) => {
+  const [doRemoveNote, isLoading, error] = useThunk(removeNote);
+
+  const handleClick = () => {
+    doRemoveNote(id);
+  };
+
   return (
     <StyledBox>
       <Details>
@@ -49,8 +58,14 @@ const Note: FC<NoteProps> = ({ title, description }) => {
         <Description>{description}</Description>
       </Details>
       <BottomContent>
-        <DeleteIcon />
-        Remove
+        {error && <div>Error deleting user.</div>}
+        {isLoading && <div>Loading...</div>}
+        {!error && !isLoading && (
+          <div onClick={handleClick}>
+            <DeleteIcon />
+            Remove
+          </div>
+        )}
       </BottomContent>
     </StyledBox>
   );
