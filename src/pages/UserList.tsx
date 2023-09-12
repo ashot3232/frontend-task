@@ -1,34 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { fetchUsers, useAppSelector } from '../store';
 
-import { fetchUsers } from '../api';
 import { UserType } from '../types';
+import { useThunk } from '../hooks/useThunk';
 
 function UserList() {
-  const [users, setUsers] = useState<UserType[]>([]);
+  const [doFetchUsers, isLoadingUsers, loadingUsersError] =
+    useThunk(fetchUsers);
+
+  const { data } = useAppSelector((state) => {
+    return state.users;
+  });
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const data = await fetchUsers();
-      setUsers(data);
-    };
+    doFetchUsers();
+  }, [doFetchUsers]);
 
-    fetchUserData();
-  }, []);
-
-  const renderedUsers = users.map((user) => {
-    return (
-      <li key={user.id}>
-        <Link to={`/users/${user.id}`}>
-          {user.firstName} {user.lastName}
-        </Link>
-      </li>
-    );
-  });
+  let content;
+  if (isLoadingUsers) {
+    content = <div>Loading...</div>;
+  } else if (loadingUsersError) {
+    content = <div>Error fetching data...</div>;
+  } else {
+    content = data.map((user: UserType) => {
+      return (
+        <li key={user.id}>
+          <Link to={`/users/${user.id}`}>
+            {user.firstName} {user.lastName}
+          </Link>
+        </li>
+      );
+    });
+  }
 
   return (
     <div>
-      <ul>{renderedUsers}</ul>
+      <ul>{content}</ul>
     </div>
   );
 }

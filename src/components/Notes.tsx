@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 
 import { NoteType } from '../types';
-import { fetchNotes } from '../api';
 import Note from './Note';
 import Box from './Box';
+import { useThunk } from '../hooks/useThunk';
+import { fetchNotes, useAppSelector } from '../store';
 
 const Wrapper = styled.div`
   margin: 50px;
@@ -34,18 +35,25 @@ const StyledBox = styled(Box)`
 `;
 
 function Notes() {
-  const [notes, setNotes] = useState<NoteType[]>([]);
+  const [doFetchNotes, isLoadingUsers, loadingUsersError] =
+    useThunk(fetchNotes);
+
+  const { data } = useAppSelector((state) => {
+    return state.notes;
+  });
 
   useEffect(() => {
-    const fetchNotesData = async () => {
-      const data = await fetchNotes();
-      setNotes(data);
-    };
+    doFetchNotes();
+  }, [doFetchNotes]);
 
-    fetchNotesData();
-  }, []);
-
-  const renderedNotes = notes.map((note) => <Note key={note.id} {...note} />);
+  let content;
+  if (isLoadingUsers) {
+    content = <div>Loading...</div>;
+  } else if (loadingUsersError) {
+    content = <div>Error fetching data...</div>;
+  } else {
+    content = data.map((note: NoteType) => <Note key={note.id} {...note} />);
+  }
 
   return (
     <Wrapper>
@@ -53,7 +61,7 @@ function Notes() {
         <AddIcon />
       </StyledBox>
 
-      {renderedNotes}
+      {content}
     </Wrapper>
   );
 }
