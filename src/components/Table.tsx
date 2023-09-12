@@ -4,6 +4,7 @@ import { GoTriangleDown, GoTriangleUp } from 'react-icons/go';
 
 const TableContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow-x: auto;
@@ -12,7 +13,7 @@ const TableContainer = styled.div`
 const StyledTable = styled.table`
   border-collapse: collapse;
   width: 90%;
-  margin-top: 40px;
+  margin-top: 20px;
 `;
 
 const TableCell = styled.td`

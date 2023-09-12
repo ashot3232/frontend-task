@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { AiOutlineDelete } from 'react-icons/ai';
@@ -15,7 +15,24 @@ const TableContainer = styled.div`
   cursor: pointer;
 `;
 
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const SearchInput = styled.input`
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  width: 20%;
+  background: #e9ecef;
+  margin-top: 30px;
+  margin-left: 5%;
+`;
+
 function UserList() {
+  const [searchTerm, setSearchTerm] = useState('');
   const [doFetchUsers, isLoadingUsers, loadingUsersError] =
     useThunk(fetchUsers);
 
@@ -69,10 +86,27 @@ function UserList() {
   } else if (loadingUsersError) {
     content = <div>Error fetching data...</div>;
   } else {
-    content = <Table data={data} columns={columns} />;
+    content = (
+      <Wrapper>
+        <SearchInput
+          type="text"
+          placeholder="Search by name"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <Table data={getFilteredUsers(data, searchTerm)} columns={columns} />
+      </Wrapper>
+    );
   }
 
   return <div>{content}</div>;
 }
+
+const getFilteredUsers = (users: UserType[], searchTerm: string) => {
+  return users.filter((user) => {
+    const fullName = `${user.firstName} ${user.lastName}`;
+    return fullName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+};
 
 export default UserList;
