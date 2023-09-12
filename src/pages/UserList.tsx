@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchUsers, useAppSelector } from '../store';
+import Table from '../components/Table';
 
 import { UserType } from '../types';
 import { useThunk } from '../hooks/useThunk';
@@ -23,15 +24,7 @@ function UserList() {
   } else if (loadingUsersError) {
     content = <div>Error fetching data...</div>;
   } else {
-    content = data.map((user: UserType) => {
-      return (
-        <li key={user.id}>
-          <Link to={`/users/${user.id}`}>
-            {user.firstName} {user.lastName}
-          </Link>
-        </li>
-      );
-    });
+    content = <Table data={data} />;
   }
 
   return (
