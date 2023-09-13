@@ -17,7 +17,7 @@ export const Wrapper = styled.div`
 `;
 
 export const AddIcon = styled(AiOutlinePlusCircle)`
-  color: ${(props) => props.theme.colors.dark};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 78px;
 `;
 
@@ -30,7 +30,7 @@ export const StyledBox = styled(Box)<React.HTMLAttributes<HTMLDivElement>>`
 `;
 
 export const StyledText = styled.p`
-  color: ${(props) => props.theme.colors.dark};
+  color: ${({ theme }) => theme.colors.text};
   font-weight: 500;
   margin-top: 20px;
 `;

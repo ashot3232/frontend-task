@@ -28,7 +28,7 @@ export const StyledModal = styled.div`
 `;
 
 export const StyledModalContent = styled.div`
-  background: #fff;
+  background: ${(props) => props.theme.colors.background};
   border-radius: 5px;
   width: calc(100% - 15px);
 `;

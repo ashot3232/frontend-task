@@ -42,10 +42,11 @@ export const StyledSortableTableHeaderContent = styled.div`
 
 export const StyledTableRow = styled.tr`
   &:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: ${({ theme }) => theme.colors.boxBackground};
   }
+
   &:hover {
-    background-color: #ddd;
+    background-color: ${({ theme }) => theme.colors.hover};
   }
 `;
 
@@ -82,5 +83,5 @@ export const StyledPaginationButton = styled.button`
 `;
 
 export const StyledPaginationInfo = styled.span`
-  color: #666;
+  color: ${({ theme }) => theme.colors.text};
 `;

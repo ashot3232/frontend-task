@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a Single Page Application (SPA) built with React and TypeScript. The application has a Home page that contains notes list, a User List page with sorting and pagination, and a User Details page.
+This project is a Single Page Application (SPA) built with React and TypeScript. The application has a Home page that contains notes list, a User List page with sorting and pagination, and a User Details page. It also includes a theme switcher for light/dark modes.
 
 ## Table of Contents
 

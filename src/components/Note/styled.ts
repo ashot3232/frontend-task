@@ -11,11 +11,12 @@ export const StyledBox = styled(Box)`
 export const StyledDetails = styled.div`
   max-height: 165px;
   overflow-y: auto;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 export const StyledDescription = styled.span`
   display: block;
-  color: #575757;
+  color: ${({ theme }) => theme.colors.text}
   font-size: 16px;
   margin-top: 5px;
 `;
@@ -28,6 +29,7 @@ export const StyledBottomContent = styled.div`
   justify-content: center;
   font-size: 18px;
   cursor: pointer;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 export const StyledDeleteIcon = styled(AiOutlineDelete)`
