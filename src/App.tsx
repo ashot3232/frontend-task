@@ -6,6 +6,7 @@ import Layout from './components/Layout';
 import Fallback from './components/Fallback';
 import Home from './pages/Home';
 import NoMatch from './pages/NoMatch';
+import ErrorBoundary from './components/ErrorBoundry';
 
 const UserDetails = React.lazy(() => import('./pages/UserDetails'));
 const UserList = React.lazy(() => import('./pages/UserList'));
@@ -22,7 +23,7 @@ const GlobalStyle = createGlobalStyle`
 
 function App() {
   return (
-    <div>
+    <ErrorBoundary>
       <GlobalStyle />
       <Routes>
         <Route path="/" element={<Layout />}>
@@ -46,7 +47,7 @@ function App() {
         </Route>
         <Route path="*" element={<NoMatch />} />
       </Routes>
-    </div>
+    </ErrorBoundary>
   );
 }
 
