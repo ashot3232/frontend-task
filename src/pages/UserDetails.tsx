@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
 import { useThunk } from '../hooks/useThunk';
@@ -83,7 +84,18 @@ const UserDetails = () => {
     );
   }
 
-  return <div>{content}</div>;
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{
+        opacity: '100%',
+        transition: { duration: 1.2 },
+      }}
+      exit={{ opacity: 0, transition: { duration: 0.8 } }}
+    >
+      {content}
+    </motion.div>
+  );
 };
 
 export default UserDetails;

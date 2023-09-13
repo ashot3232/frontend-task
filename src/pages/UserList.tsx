@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 import { AiOutlineDelete } from 'react-icons/ai';
 
 import { fetchUsers, removeUser, useAppSelector } from '../store';
@@ -106,7 +107,18 @@ function UserList() {
     );
   }
 
-  return <div>{content}</div>;
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{
+        opacity: '100%',
+        transition: { duration: 1.2 },
+      }}
+      exit={{ opacity: 0, transition: { duration: 0.8 } }}
+    >
+      {content}
+    </motion.div>
+  );
 }
 
 const getFilteredUsers = (users: UserType[], searchTerm: string) => {

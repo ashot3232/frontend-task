@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { createGlobalStyle } from 'styled-components';
 
 import Layout from './components/Layout';
@@ -25,28 +26,30 @@ function App() {
   return (
     <ErrorBoundary>
       <GlobalStyle />
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route
-            path="users"
-            element={
-              <React.Suspense fallback={<Fallback />}>
-                <UserList />
-              </React.Suspense>
-            }
-          />
-          <Route
-            path="users/:id"
-            element={
-              <React.Suspense fallback={<Fallback />}>
-                <UserDetails />
-              </React.Suspense>
-            }
-          />
-        </Route>
-        <Route path="*" element={<NoMatch />} />
-      </Routes>
+      <AnimatePresence mode="wait">
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route
+              path="users"
+              element={
+                <React.Suspense fallback={<Fallback />}>
+                  <UserList />
+                </React.Suspense>
+              }
+            />
+            <Route
+              path="users/:id"
+              element={
+                <React.Suspense fallback={<Fallback />}>
+                  <UserDetails />
+                </React.Suspense>
+              }
+            />
+          </Route>
+          <Route path="*" element={<NoMatch />} />
+        </Routes>
+      </AnimatePresence>
     </ErrorBoundary>
   );
 }
