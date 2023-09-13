@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 
 import Modal from '../Modal';
 import { addNote } from '../../store';
@@ -14,13 +14,14 @@ import {
   StyledLabel,
   StyledButton,
 } from './styled';
+import { NoteType } from '../../types';
 
 type AddNoteProps = {
   onClose(): void;
 };
 
 const AddNote: FC<AddNoteProps> = ({ onClose }) => {
-  const [note, setNote] = useState({
+  const [note, setNote] = useState<Omit<NoteType, 'id'>>({
     title: '',
     description: '',
   });
@@ -33,20 +34,24 @@ const AddNote: FC<AddNoteProps> = ({ onClose }) => {
     }
   }, [isLoading, error, onClose, submitted]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSubmitted(true);
-    doCreateNote(note);
-  };
+  const handleSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setSubmitted(true);
+      doCreateNote(note);
+    },
+    [note, doCreateNote],
+  );
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setNote((prevNote) => ({
-      ...prevNote,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setNote((prevNote) => ({
+        ...prevNote,
+        [e.target.name]: e.target.value,
+      }));
+    },
+    [],
+  );
 
   return (
     <Modal>

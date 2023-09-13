@@ -13,25 +13,18 @@ import {
   StyledSortableTableHeader,
   StyledSortableTableHeaderContent,
 } from './styled';
+import { Nullable, SortOrder, Column, HasId } from '../../types';
 
-interface Column {
-  key: string;
-  label: string;
-  sortValue?(item: any): any;
-  render?(item: any): React.ReactNode;
-  header?(): React.ReactNode;
-}
-
-interface TableProps {
-  data: any[];
-  columns: Column[];
+interface TableProps<T extends HasId> {
+  data: T[];
+  columns: Column<T>[];
 }
 
 const itemsPerPage = 10;
 
-const Table: FC<TableProps> = ({ data, columns }) => {
-  const [sortOrder, setSortOrder] = useState<null | string>(null);
-  const [sortBy, setSortBy] = useState<null | string>(null);
+function Table<T extends HasId>({ data, columns }: TableProps<T>) {
+  const [sortOrder, setSortOrder] = useState<Nullable<SortOrder>>(null);
+  const [sortBy, setSortBy] = useState<Nullable<string>>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
@@ -40,24 +33,24 @@ const Table: FC<TableProps> = ({ data, columns }) => {
 
   const handleClick = (label: string) => {
     if (sortBy && label !== sortBy) {
-      setSortOrder('asc');
+      setSortOrder(SortOrder.ASC);
       setSortBy(label);
       return;
     }
 
     if (sortOrder === null) {
-      setSortOrder('asc');
+      setSortOrder(SortOrder.ASC);
       setSortBy(label);
-    } else if (sortOrder === 'asc') {
-      setSortOrder('desc');
+    } else if (sortOrder === SortOrder.ASC) {
+      setSortOrder(SortOrder.DESC);
       setSortBy(label);
-    } else if (sortOrder === 'desc') {
+    } else if (SortOrder.DESC) {
       setSortOrder(null);
       setSortBy(null);
     }
   };
 
-  const updatedColumns = columns.map((column) => {
+  const updatedColumns = columns.map((column: Column<T>) => {
     if (!column.sortValue) {
       return column;
     }
@@ -65,10 +58,7 @@ const Table: FC<TableProps> = ({ data, columns }) => {
     return {
       ...column,
       header: () => (
-        <StyledSortableTableHeader
-          key={column.key}
-          onClick={() => handleClick(column.label)}
-        >
+        <StyledSortableTableHeader onClick={() => handleClick(column.label)}>
           <StyledSortableTableHeaderContent>
             {getIcons(column.label, sortBy, sortOrder)}
             {column.label}
@@ -81,19 +71,23 @@ const Table: FC<TableProps> = ({ data, columns }) => {
   let sortedData = data;
   if (sortOrder && sortBy) {
     const { sortValue } = columns.find(
-      (column) => column.label === sortBy,
-    ) as Column;
+      (column: Column<T>) => column.label === sortBy,
+    ) as Column<T>;
     sortedData = [...data].sort((a, b) => {
-      const valueA = sortValue && sortValue(a);
-      const valueB = sortValue && sortValue(b);
+      if (sortValue) {
+        const valueA = sortValue(a);
+        const valueB = sortValue(b);
 
-      const reverseOrder = sortOrder === 'asc' ? 1 : -1;
+        const reverseOrder = sortOrder === SortOrder.ASC ? 1 : -1;
 
-      if (typeof valueA === 'string') {
-        return valueA.localeCompare(valueB) * reverseOrder;
+        if (typeof valueA === 'string' && typeof valueB === 'string') {
+          return valueA.localeCompare(valueB) * reverseOrder;
+        } else if (typeof valueA === 'number' && typeof valueB === 'number') {
+          return (valueA - valueB) * reverseOrder;
+        }
       }
 
-      return (valueA - valueB) * reverseOrder;
+      return 1;
     });
   }
 
@@ -102,14 +96,12 @@ const Table: FC<TableProps> = ({ data, columns }) => {
   const endIndex = startIndex + itemsPerPage;
   const dataToDisplay = sortedData.slice(startIndex, endIndex);
 
-  const renderedRows = dataToDisplay.map((item) => {
+  const renderedRows = dataToDisplay.map((item: T) => {
     return (
       <StyledTableRow key={item.id}>
-        {columns.map(({ key, render }) => {
+        {columns.map(({ key, render }: Column<T>) => {
           if (!render) {
-            return (
-              <StyledTableCell key={key}>{item[key as string]}</StyledTableCell>
-            );
+            return <StyledTableCell key={key}>{item[key]}</StyledTableCell>;
           }
           return <StyledTableCell key={key}>{render(item)}</StyledTableCell>;
         })}
@@ -117,7 +109,7 @@ const Table: FC<TableProps> = ({ data, columns }) => {
     );
   });
 
-  const renderedHeaders = updatedColumns.map(({ label, header }) => {
+  const renderedHeaders = updatedColumns.map(({ label, header }: Column<T>) => {
     if (header) {
       return <Fragment key={label}>{header()}</Fragment>;
     }
@@ -152,6 +144,6 @@ const Table: FC<TableProps> = ({ data, columns }) => {
       </StyledPagination>
     </TableContainer>
   );
-};
+}
 
 export default Table;

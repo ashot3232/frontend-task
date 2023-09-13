@@ -9,12 +9,9 @@ import {
   StyledBottomContent,
   StyledDeleteIcon,
 } from './styled';
+import { NoteType } from '../../types';
 
-interface NoteProps {
-  id: string;
-  title: string;
-  description: string;
-}
+type NoteProps = NoteType;
 
 const Note: FC<NoteProps> = ({ id, title, description }) => {
   const [doRemoveNote, isLoading, error] = useThunk(removeNote);

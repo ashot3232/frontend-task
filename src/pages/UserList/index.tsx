@@ -5,7 +5,7 @@ import { AiOutlineDelete } from 'react-icons/ai';
 
 import { fetchUsers, removeUser, useAppSelector } from '../../store';
 import Table from '../../components/Table';
-import { UserType } from '../../types';
+import { Column, UserType } from '../../types';
 import { useThunk } from '../../hooks/useThunk';
 import { Wrapper, TableContainer, SearchInput } from './styled';
 import { motionConfig } from '../../config';
@@ -30,7 +30,7 @@ function UserList() {
     ) && doRemoveUser(user.id);
   };
 
-  const columns = [
+  const columns: Column<UserType>[] = [
     {
       label: 'Name',
       key: 'name',
@@ -80,7 +80,10 @@ function UserList() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <Table data={getFilteredUsers(data, searchTerm)} columns={columns} />
+        <Table<UserType>
+          data={getFilteredUsers(data, searchTerm)}
+          columns={columns}
+        />
       </Wrapper>
     );
   }
