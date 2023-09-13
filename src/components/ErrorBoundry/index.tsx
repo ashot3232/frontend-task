@@ -1,27 +1,5 @@
 import React, { Component, ErrorInfo } from 'react';
-import styled from 'styled-components';
-
-const ErrorPage = styled.div`
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #f2f2f2;
-`;
-
-const Oops = styled.div`
-  font-size: 4em;
-  font-weight: bold;
-  color: red;
-`;
-
-const Message = styled.div`
-  font-size: 1.5em;
-  color: black;
-  margin-top: 1em;
-`;
+import { Wrapper, Oops, Message } from './styled';
 
 interface Props {
   children: React.ReactNode;
@@ -56,10 +34,10 @@ class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <ErrorPage>
+        <Wrapper>
           <Oops>Oops!</Oops>
           <Message>Something went wrong...</Message>
-        </ErrorPage>
+        </Wrapper>
       );
     }
 

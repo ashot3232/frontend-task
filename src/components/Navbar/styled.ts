@@ -1,13 +1,12 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
 
-const StyledNav = styled.nav`
+export const StyledNav = styled.nav`
   overflow: hidden;
   background-color: #333;
 `;
 
-const StyledLink = styled(NavLink)`
+export const StyledLink = styled(NavLink)`
   float: left;
   display: block;
   color: ${(props) => props.theme.colors.light};
@@ -26,14 +25,3 @@ const StyledLink = styled(NavLink)`
     color: ${(props) => props.theme.colors.light};
   }
 `;
-
-function Navbar() {
-  return (
-    <StyledNav>
-      <StyledLink to="/">Home</StyledLink>
-      <StyledLink to="/users">Users</StyledLink>
-    </StyledNav>
-  );
-}
-
-export default Navbar;

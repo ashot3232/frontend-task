@@ -1,91 +1,18 @@
 import React, { FC, Fragment, useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { GoTriangleDown, GoTriangleUp } from 'react-icons/go';
 
-const TableContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  overflow-x: auto;
-`;
-
-const StyledTable = styled.table`
-  border-collapse: collapse;
-  width: 90%;
-  margin-top: 20px;
-`;
-
-const TableCell = styled.td`
-  border: 1px solid #ddd;
-  padding: 8px;
-`;
-
-const TableHeader = styled.th`
-  border: 1px solid #ddd;
-  padding: 12px;
-  text-align: left;
-  background-color: #04aa6d;
-  color: white;
-`;
-
-const SortableTableHeader = styled(TableHeader)`
-  cursor: pointer;
-
-  &:hover {
-    background: #04aa6de0;
-  }
-`;
-
-const SortableTableHeaderContent = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const TableRow = styled.tr`
-  &:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-  &:hover {
-    background-color: #ddd;
-  }
-`;
-
-const IconWrapper = styled.div`
-  display: block;
-  margin-right: 10px;
-`;
-
-const Pagination = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  gap: 10px;
-`;
-
-const PaginationButton = styled.button`
-  background-color: #04aa6d;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #03a05e;
-  }
-
-  &:disabled {
-    background-color: #ddd;
-    cursor: not-allowed;
-  }
-`;
-
-const PaginationInfo = styled.span`
-  color: #666;
-`;
+import { getIcons } from './helpers';
+import {
+  TableContainer,
+  StyledTable,
+  StyledTableCell,
+  StyledPagination,
+  StyledPaginationInfo,
+  StyledPaginationButton,
+  StyledTableHeader,
+  StyledTableRow,
+  StyledSortableTableHeader,
+  StyledSortableTableHeaderContent,
+} from './styled';
 
 interface Column {
   key: string;
@@ -138,15 +65,15 @@ const Table: FC<TableProps> = ({ data, columns }) => {
     return {
       ...column,
       header: () => (
-        <SortableTableHeader
+        <StyledSortableTableHeader
           key={column.key}
           onClick={() => handleClick(column.label)}
         >
-          <SortableTableHeaderContent>
+          <StyledSortableTableHeaderContent>
             {getIcons(column.label, sortBy, sortOrder)}
             {column.label}
-          </SortableTableHeaderContent>
-        </SortableTableHeader>
+          </StyledSortableTableHeaderContent>
+        </StyledSortableTableHeader>
       ),
     };
   });
@@ -177,14 +104,16 @@ const Table: FC<TableProps> = ({ data, columns }) => {
 
   const renderedRows = dataToDisplay.map((item) => {
     return (
-      <TableRow key={item.id}>
+      <StyledTableRow key={item.id}>
         {columns.map(({ key, render }) => {
           if (!render) {
-            return <TableCell key={key}>{item[key as string]}</TableCell>;
+            return (
+              <StyledTableCell key={key}>{item[key as string]}</StyledTableCell>
+            );
           }
-          return <TableCell key={key}>{render(item)}</TableCell>;
+          return <StyledTableCell key={key}>{render(item)}</StyledTableCell>;
         })}
-      </TableRow>
+      </StyledTableRow>
     );
   });
 
@@ -193,69 +122,36 @@ const Table: FC<TableProps> = ({ data, columns }) => {
       return <Fragment key={label}>{header()}</Fragment>;
     }
 
-    return <TableHeader key={label}>{label}</TableHeader>;
+    return <StyledTableHeader key={label}>{label}</StyledTableHeader>;
   });
 
   return (
     <TableContainer>
       <StyledTable>
         <thead>
-          <TableRow>{renderedHeaders}</TableRow>
+          <StyledTableRow>{renderedHeaders}</StyledTableRow>
         </thead>
         <tbody>{renderedRows}</tbody>
       </StyledTable>
-      <Pagination>
-        <PaginationButton
+      <StyledPagination>
+        <StyledPaginationButton
           onClick={() => setCurrentPage((prev) => prev - 1)}
           disabled={currentPage === 1}
         >
           Previous
-        </PaginationButton>
-        <PaginationInfo>
+        </StyledPaginationButton>
+        <StyledPaginationInfo>
           Page {currentPage} of {totalPages}
-        </PaginationInfo>
-        <PaginationButton
+        </StyledPaginationInfo>
+        <StyledPaginationButton
           onClick={() => setCurrentPage((prev) => prev + 1)}
           disabled={currentPage === totalPages}
         >
           Next
-        </PaginationButton>
-      </Pagination>
+        </StyledPaginationButton>
+      </StyledPagination>
     </TableContainer>
   );
 };
-
-function getIcons(label: string, sortBy: any, sortOrder: any) {
-  const upDownIcons = (
-    <div>
-      <IconWrapper>
-        <GoTriangleUp />
-      </IconWrapper>
-      <IconWrapper>
-        <GoTriangleDown />
-      </IconWrapper>
-    </div>
-  );
-
-  if (label !== sortBy) {
-    return upDownIcons;
-  }
-
-  if (sortOrder === null) {
-    return upDownIcons;
-  } else if (sortOrder === 'asc') {
-    return (
-      <IconWrapper>
-        <GoTriangleUp />
-      </IconWrapper>
-    );
-  } else if (sortOrder === 'desc') {
-    return (
-      <IconWrapper>
-        <GoTriangleDown />
-      </IconWrapper>
-    );
-  }
-}
 
 export default Table;

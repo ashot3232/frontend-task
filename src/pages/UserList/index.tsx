@@ -1,36 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { AiOutlineDelete } from 'react-icons/ai';
 
-import { fetchUsers, removeUser, useAppSelector } from '../store';
-import Table from '../components/Table';
-import { UserType } from '../types';
-import { useThunk } from '../hooks/useThunk';
-
-const TableContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const SearchInput = styled.input`
-  padding: 10px;
-  font-size: 17px;
-  border: 1px solid lightgray;
-  border-radius: 5px;
-  width: 20%;
-  background: #e9ecef;
-  margin-top: 30px;
-  margin-left: 5%;
-`;
+import { fetchUsers, removeUser, useAppSelector } from '../../store';
+import Table from '../../components/Table';
+import { UserType } from '../../types';
+import { useThunk } from '../../hooks/useThunk';
+import { Wrapper, TableContainer, SearchInput } from './styled';
+import { motionConfig } from '../../config';
 
 function UserList() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -107,18 +85,7 @@ function UserList() {
     );
   }
 
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{
-        opacity: '100%',
-        transition: { duration: 1.2 },
-      }}
-      exit={{ opacity: 0, transition: { duration: 0.8 } }}
-    >
-      {content}
-    </motion.div>
-  );
+  return <motion.div {...motionConfig}>{content}</motion.div>;
 }
 
 const getFilteredUsers = (users: UserType[], searchTerm: string) => {
